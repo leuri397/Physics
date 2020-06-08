@@ -86,11 +86,19 @@ int main(int argc, char** argv)
     }
     for (int i = 0; i < electricField.size(); i++)
     {
-        image[i].R = (abs(electricField[i].x_value / maxField)) * 255;
-        //image[i].G = (distance(0, 0, abs(electricField[i].x_value), abs(electricField[i].y_value)) / maxField) * 255;
-        //image[i].R = image[i].G;
-        //image[i].B = image[i].G;
-        image[i].B = (abs(electricField[i].y_value / maxField)) * 255;
+        double buffer;
+        buffer = (distance(0, 0, abs(electricField[i].x_value), abs(electricField[i].y_value)) / maxField);
+        if (buffer > 1)
+            buffer = 1;
+        if (buffer < 0.25)
+        {
+            image[i].B = buffer * 4 * 200;
+        }
+        else
+        {
+            image[i].R = ((buffer - 0.25) * 255)/0.75;
+            image[i].B = 255 - image[i].R;
+        }
     }
     int image_x = (x_end - x_start) / grid_step + 1, image_y = (y_end - y_start) / grid_step + 1;
     Picture NewPic(image_y, image_x, image);
@@ -104,12 +112,12 @@ std::pair<int, int> getNearestX(const std::vector<Point>& field, long double x, 
     int up = 0, down = 0;
     for (int i = 0; i < field.size(); i++)
     {
-        if ((distance(field[i].x, field[i].y, x, y) < distance_up)&&(field[i].x - x > 0))
+        if ((distance(field[i].x, field[i].y, x, y) < distance_up)&&(field[i].x > x))
         {
             distance_up = distance(field[i].x, field[i].y, x, y);
             up = i;
         }
-        if ((distance(field[i].x, field[i].y, x, y) < distance_down) && (field[i].x - x < 0))
+        if ((distance(field[i].x, field[i].y, x, y) < distance_down) && (field[i].x < x))
         {
             distance_down = distance(field[i].x, field[i].y, x, y);
             down = i;
@@ -124,12 +132,12 @@ std::pair<int, int> getNearestY(const std::vector<Point>& field, long double x, 
     int up = 0, down = 0;
     for (int i = 0; i < field.size(); i++)
     {
-        if ((distance(field[i].x, field[i].y, x, y) < distance_up) && (field[i].y - y > 0))
+        if ((distance(field[i].x, field[i].y, x, y) < distance_up) && (field[i].y > y))
         {
             distance_up = distance(field[i].x, field[i].y, x, y);
             up = i;
         }
-        if ((distance(field[i].x, field[i].y, x, y) < distance_down) && (field[i].y - y < 0))
+        if ((distance(field[i].x, field[i].y, x, y) < distance_down) && (field[i].y < y))
         {
             distance_down = distance(field[i].x, field[i].y, x, y);
             down = i;
