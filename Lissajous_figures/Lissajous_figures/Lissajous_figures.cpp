@@ -224,13 +224,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             SetTextColor(hdc, RGB(255, 255, 0));
             SetBkColor(hdc, RGB(0, 0, 0));
             TextOut(hdc, x_coord, y_coord, L"A:", 2);
-            MoveWindow(hEditA, x_coord, y_coord + 20, 360, 23, false);
+            MoveWindow(hEditA, x_coord, y_coord + 20, whole.right - whole.left - x_coord - 100, 23, false);
             y_coord = 2*(whole.bottom - whole.top) / 10 - 20;
             TextOut(hdc, x_coord, y_coord, L"B:", 2);
-            MoveWindow(hEditB, x_coord, y_coord + 20, 360, 23, false);
+            MoveWindow(hEditB, x_coord, y_coord + 20, whole.right - whole.left - x_coord - 100, 23, false);
             y_coord = 3 * (whole.bottom - whole.top) / 10 - 20;
             TextOut(hdc, x_coord, y_coord, L"Phase:", 6);
-            MoveWindow(hEditPhase, x_coord, y_coord + 20, 360, 23, false);
+            MoveWindow(hEditPhase, x_coord, y_coord + 20, whole.right - whole.left - x_coord - 100, 23, false);
             Oscillograph(hdc, hWnd);
             EndPaint(hWnd, &ps);
         }
