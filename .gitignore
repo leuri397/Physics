@@ -26,3 +26,9 @@ Lissajous_figures/Lissajous_figures/Debug/
 *.filters
 
 *.user
+
+*.res
+
+*.iobj
+
+*.ipdb

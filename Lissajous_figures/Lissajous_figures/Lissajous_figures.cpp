@@ -4,8 +4,8 @@
 #include "framework.h"
 #include "Lissajous_figures.h"
 #include "Generator.h"
-#define UPDATE_TIME_MS 25
-#define ITERATIONS_IN_UPDATE 500
+#define UPDATE_TIME_MS 100
+#define ITERATIONS_IN_UPDATE 5000
 
 #define MAX_LOADSTRING 100
 
@@ -117,13 +117,13 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
     RECT whole;
     GetWindowRect(hWnd, &whole);
     int x_coord = (whole.right - whole.left) / 2, y_coord = (whole.bottom - whole.top) / 10;
-    hEditA = CreateWindowEx(WS_EX_CLIENTEDGE , L"Edit", L"1", WS_VISIBLE | WS_CHILD | ES_LEFT| ES_AUTOHSCROLL | ES_NUMBER,
+    hEditA = CreateWindowEx(WS_EX_CLIENTEDGE , L"Edit", L"1", WS_VISIBLE | WS_CHILD | ES_LEFT| ES_AUTOHSCROLL,
         x_coord, y_coord, 360, 23, hWnd, nullptr, hInst, 0);
     y_coord = 2* (whole.bottom - whole.top) / 10;
-    hEditB = CreateWindowEx(WS_EX_CLIENTEDGE, L"Edit", L"1", WS_VISIBLE | WS_CHILD | ES_LEFT | ES_AUTOHSCROLL | ES_NUMBER,
+    hEditB = CreateWindowEx(WS_EX_CLIENTEDGE, L"Edit", L"1", WS_VISIBLE | WS_CHILD | ES_LEFT | ES_AUTOHSCROLL,
         x_coord, y_coord, 360, 23, hWnd, nullptr, hInst, 0);
     y_coord = 3 * (whole.bottom - whole.top) / 10;
-    hEditPhase = CreateWindowEx(WS_EX_CLIENTEDGE, L"Edit", L"90", WS_VISIBLE | WS_CHILD | ES_LEFT | ES_AUTOHSCROLL | ES_NUMBER,
+    hEditPhase = CreateWindowEx(WS_EX_CLIENTEDGE, L"Edit", L"0", WS_VISIBLE | WS_CHILD | ES_LEFT | ES_AUTOHSCROLL,
         x_coord, y_coord, 360, 23, hWnd, nullptr, hInst, 0);
     a_text[0] = 40;
     b_text[0] = 40;
@@ -159,6 +159,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     switch (message)
     {
     case WM_TIMER:
+        int length_a;
+        int length_b;
+        int length_phase;
         switch (wParam)
         {
         case timer1:
@@ -168,10 +171,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             whole.right /= 2.3;
             whole.bottom -= whole.top;
             whole.top = 0;
-            result = RedrawWindow(hWnd, &whole , nullptr, RDW_ERASE | RDW_INVALIDATE | RDW_ERASENOW);
-            int length_a = SendMessage(hEditA, EM_GETLINE, 1, (LPARAM)a_text);
-            int length_b = SendMessage(hEditB, EM_GETLINE, 1, (LPARAM)b_text);
-            int length_phase = SendMessage(hEditPhase, EM_GETLINE, 1, (LPARAM)phase_text);
+            result = RedrawWindow(hWnd, &whole , nullptr,  RDW_ERASE | RDW_INVALIDATE | RDW_ERASENOW);
+            length_a = SendMessage(hEditA, EM_GETLINE, 1, (LPARAM)a_text);
+            length_b = SendMessage(hEditB, EM_GETLINE, 1, (LPARAM)b_text);
+            length_phase = SendMessage(hEditPhase, EM_GETLINE, 1, (LPARAM)phase_text);
             double a, b, phase;
             _tcsncpy_s(a_text, a_text, length_a);
             _tcsncpy_s(b_text, b_text, length_b);
@@ -283,7 +286,7 @@ void Oscillograph(HDC hDC, HWND hWnd)
     {
         y_size = x_size;
     }
-    static int last_coord_x, last_coord_y;
+    static int last_coord_x = x_size, last_coord_y = y_size;
     HPEN greenRay = CreatePen(PS_SOLID, 1, RGB(100, 255, 0));
     HGDIOBJ hPen = SelectObject(hDC, greenRay);
     MoveToEx(hDC, last_coord_x, last_coord_y, NULL);
