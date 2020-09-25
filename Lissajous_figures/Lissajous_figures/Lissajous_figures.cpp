@@ -287,7 +287,7 @@ void Oscillograph(HDC hDC, HWND hWnd)
         y_size = x_size;
     }
     static int last_coord_x = x_size, last_coord_y = y_size;
-    HPEN greenRay = CreatePen(PS_SOLID, 1, RGB(100, 255, 0));
+    HPEN greenRay = CreatePen(PS_SOLID, 1, RGB(110, 255, 0));
     HGDIOBJ hPen = SelectObject(hDC, greenRay);
     MoveToEx(hDC, last_coord_x, last_coord_y, NULL);
     for (int i = 0; i < ITERATIONS_IN_UPDATE; i++)
